@@ -1,4 +1,3 @@
 /data/
 /.ros
-
-
+.bash_history

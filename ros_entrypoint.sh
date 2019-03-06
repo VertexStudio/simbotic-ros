@@ -11,6 +11,5 @@ pushd ~/simbotic_catkin_workspace
 catkin_make
 popd
 source "$HOME"/simbotic_catkin_workspace/devel/setup.bash
-ls
 
 exec "$@"

@@ -2,7 +2,7 @@
 set -e
 
 # setup ROS environment
-source "$HOME"/.bashrc
+source "/opt/ros/$ROS_DISTRO/setup.bash"
 
 # building ROS packages
 cd ~/simbotic_catkin_workspace

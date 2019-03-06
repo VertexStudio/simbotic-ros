@@ -1,9 +1,9 @@
-export PS1="\[\e[31m\]cortex\[\e[m\] \[\e[33m\]\w\[\e[m\]$ "
+export PS1="\[\e[0;35m\]ros\[\e[m\] \[\e[33m\]\w\[\e[m\]$ "
 export TERM=xterm-256color
 alias grep="grep --color=auto"
 alias ls="ls --color=auto"
 
-echo -e "\e[1;31m"
+echo -e "\e[0;35m"
 cat<<TF
 
 ███████╗██╗███╗   ███╗██████╗  ██████╗ ████████╗██╗ ██████╗    ██████╗  ██████╗ ███████╗

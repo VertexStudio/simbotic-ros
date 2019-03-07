@@ -122,7 +122,7 @@ RUN rosdep init \
 # install ros packages
 ENV ROS_DISTRO melodic
 RUN apt-get update && apt-get install -y \ 
-    ros-{ROS_DISTRO}-desktop \
+    ros-${ROS_DISTRO}-desktop \
     && rm -rf /var/lib/apt/lists/*
 
 RUN ${PIP} install rospkg pyyaml osc4py3

@@ -1,11 +1,11 @@
 version: "3.7"
 services:
-  simbotic-ros/gpu:
+  simbotic-ros-gpu:
     build:
       context: .
       dockerfile: Dockerfile.gpu
       args:
-        USER_ID: ${USER_ID}
-        GROUP_ID: ${GROUP_ID}
+        - USER_ID
+        - GROUP_ID
       network: host
     image: simbotic-ros/gpu:v0.0.1

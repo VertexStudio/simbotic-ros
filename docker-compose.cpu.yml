@@ -1,0 +1,22 @@
+version: "3.7"
+services:
+  simbotic-ros-cpu:
+    container_name: simbotic-ros-cpu
+    build:
+      context: .
+      dockerfile: Dockerfile.cpu
+      args:
+        - USER_ID
+        - GROUP_ID
+      network: host
+    image: simbotic-ros/cpu:v0.0.1
+    environment: 
+      - DISPLAY
+    privileged: true
+    cap_add:
+      - SYS_PTRACE
+    volumes:
+      - type: bind
+        source: ${CURRENT_DIRECTORY}
+        target: ${HOME_SIM}
+    entrypoint: "${HOME_SIM}/ros_entrypoint.sh"

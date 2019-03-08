@@ -55,7 +55,7 @@ RUN chmod a+rwx /etc/bash.bashrc
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV TZ=America/Detroit
-RUN apt-get install -y tzdata
+RUN apt-get update && apt-get install -y tzdata
 
 # setup timezone
 RUN echo 'Etc/UTC' > /etc/timezone && \
@@ -85,7 +85,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 # setup environment
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
-ENV ROS_LOG_DIR=/sim/.ros
+ENV ROS_LOG_DIR=/home/sim/.ros
 
 # bootstrap rosdep
 RUN rosdep init \
@@ -94,15 +94,18 @@ RUN rosdep init \
 # install ros packages
 ENV ROS_DISTRO melodic
 RUN apt-get update && apt-get install -y \
-    ros-${ROS_DISTRO}-ros-core && \
-    rm -rf /var/lib/apt/lists/*
+        ros-${ROS_DISTRO}-ros-core && \
+        rm -rf /var/lib/apt/lists/*
 RUN apt-get update && apt-get install -y \
-    ros-${ROS_DISTRO}-pointcloud-to-laserscan
-RUN apt-get install -y ros-${ROS_DISTRO}-cv-bridge
+        ros-${ROS_DISTRO}-pointcloud-to-laserscan
+RUN apt-get update && apt-get install -y \
+        ros-${ROS_DISTRO}-cv-bridge
 
-RUN ${PIP} install rospkg pyyaml
-
-RUN apt-get install -y python3-jinja2 python3-empy
+RUN ${PIP} install rospkg pyyaml osc4py3
+RUN apt-get update && apt-get install -y \
+        python3-jinja2 \
+        python3-empy \
+        && rm -rf /var/lib/apt/lists/*
 RUN ${PIP} install numpy toml catkin_pkg \
     dronekit dronekit-sitl
 
@@ -114,9 +117,12 @@ RUN groupadd -g ${GROUP_ID} sim && \
     echo "sim:sim" | chpasswd && adduser sim sudo && \
     echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
+ENV HOME /home/sim
 ENV SIM_ROOT=$HOME
 
 USER sim
 WORKDIR $HOME
+
+ENTRYPOINT ["./ros_entrypoint.sh"]
 
 CMD ["bash"]

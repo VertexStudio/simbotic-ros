@@ -1,0 +1,26 @@
+version: "2.4"
+services:
+  simbotic-ros-gpu:
+    runtime: nvidia
+    container_name: simbotic-ros-gpu
+    build:
+      context: .
+      dockerfile: Dockerfile.gpu
+      args:
+        - USER_ID
+        - GROUP_ID
+      network: host
+    image: simbotic-ros/gpu:v0.0.1
+    environment: 
+      - DISPLAY
+    privileged: true
+    cap_add:
+      - SYS_PTRACE
+    volumes:
+      - type: bind
+        source: ${CURRENT_DIRECTORY}
+        target: ${HOME_SIM}
+      - type: bind
+        source: /tmp/.X11-unix
+        target: /tmp/.X11-unix
+    entrypoint: "${HOME_SIM}/ros_entrypoint.sh"

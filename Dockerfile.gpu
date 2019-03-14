@@ -1,7 +1,6 @@
 ARG UBUNTU_VERSION=18.04
 
-#FROM nvidia/cuda:10.0-base-ubuntu${UBUNTU_VERSION} as base
-FROM nvidia/cudagl:10.0-runtime-ubuntu${UBUNTU_VERSION} as base
+FROM nvidia/cudagl:10.0-devel-ubuntu${UBUNTU_VERSION} as base
 
 # This line instructs `debconf` to store in its database an answer for the program debconf.
 # If (the running program) debconf later asks (the database of answers) debconf what is 

@@ -1,12 +1,11 @@
 ARG UBUNTU_VERSION=18.04
 
-FROM nvidia/cuda:10.0-base-ubuntu${UBUNTU_VERSION} as base
+FROM ubuntu:${UBUNTU_VERSION} as base
 
 # Pick up some TF dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
         sudo \
-        libcudnn7=7.4.1.5-1+cuda10.0 \
         libfreetype6-dev \
         libhdf5-serial-dev \
         # libpng12-dev \
@@ -17,9 +16,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         git \
         rsync \
         unzip
-
-# For CUDA profiling, TensorFlow requires CUPTI.
-ENV LD_LIBRARY_PATH /usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64:$LD_LIBRARY_PATH
 
 ARG USE_PYTHON_3_NOT_2=1
 ARG _PY_SUFFIX=${USE_PYTHON_3_NOT_2:+3}

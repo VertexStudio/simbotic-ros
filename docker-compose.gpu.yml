@@ -10,6 +10,7 @@ services:
         - USER_ID
         - GROUP_ID
       network: host
+    network_mode: host
     image: simbotic-ros/gpu:v0.0.1
     environment: 
       - DISPLAY

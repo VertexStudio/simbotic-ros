@@ -4,20 +4,20 @@
 
 import rospy
 from math import sqrt
-from geometry_msgs.msg import PoseStamped, Quaternion
+from geometry_msgs.msg import PoseStamped, PointStamped
 from osc4py3.as_eventloop import (osc_startup, osc_udp_server, osc_method,
                                   osc_process, osc_terminate)
 from osc4py3 import oscmethod as osm
 
 
 def handleOSCPoseMessage(px, py, pz, qx, qy, qz, qw):
-    agentP = PoseStamped()
+    agentPose = PoseStamped()
 
-    agentP.header.stamp = rospy.Time.now()
-    agentP.header.frame_id = "unreal"
-    agentP.pose.position.x = float(px)/100
-    agentP.pose.position.y = -float(py)/100
-    agentP.pose.position.z = float(pz)/100
+    agentPose.header.stamp = rospy.Time.now()
+    agentPose.header.frame_id = "unreal"
+    agentPose.pose.position.x = float(px)/100
+    agentPose.pose.position.y = -float(py)/100
+    agentPose.pose.position.z = float(pz)/100
     quatX = float(qx)/100
     quatY = float(qy)/100
     quatZ = float(qz)/100
@@ -25,27 +25,47 @@ def handleOSCPoseMessage(px, py, pz, qx, qy, qz, qw):
     quatLen = sqrt(quatX**2 + quatY**2 + quatZ**2 + quatW**2)
 
     # Normalized quaternion
-    agentP.pose.orientation.x = quatX/quatLen
-    agentP.pose.orientation.y = quatY/quatLen
-    agentP.pose.orientation.z = -quatZ/quatLen
-    agentP.pose.orientation.w = quatW/quatLen
+    agentPose.pose.orientation.x = quatX/quatLen
+    agentPose.pose.orientation.y = quatY/quatLen
+    agentPose.pose.orientation.z = -quatZ/quatLen
+    agentPose.pose.orientation.w = quatW/quatLen
 
     poseStr = "Position(%s, %s, %s), Quaternion(%s, %s, %s, %s)" % (
-        agentP.pose.position.x, agentP.pose.position.x, agentP.pose.position.x, 
-        agentP.pose.orientation.x, agentP.pose.orientation.y, agentP.pose.orientation.z, agentP.pose.orientation.w)
+        agentPose.pose.position.x, agentPose.pose.position.x, agentPose.pose.position.x, 
+        agentPose.pose.orientation.x, agentPose.pose.orientation.y, agentPose.pose.orientation.z, agentPose.pose.orientation.w)
+    rospy.loginfo("PoseStamped")
     rospy.loginfo(poseStr)
 
-    pub.publish(agentP)
+    pubPose.publish(agentPose)
+    rate.sleep()
+
+def handleOSCPointMessage(px, py, pz):
+    agentPoint = PointStamped()
+
+    agentPoint.header.stamp = rospy.Time.now()
+    agentPoint.header.frame_id = "unreal"
+    agentPoint.point.x = float(px)/100
+    agentPoint.point.y = -float(py)/100
+    agentPoint.point.z = float(pz)/100
+
+    pointStr = "Position(%s, %s, %s)" % (
+        agentPoint.point.x, agentPoint.point.x, agentPoint.point.x)
+    rospy.loginfo("PointStamped")
+    rospy.loginfo(pointStr)
+
+    pubPoint.publish(agentPoint)
     rate.sleep()
 
 osc_startup()
 osc_udp_server("0.0.0.0", 7000, "UnrealGAMS")
 
 osc_method("/agent/0/pose", handleOSCPoseMessage)
+osc_method("/agent/0/pos", handleOSCPointMessage)
 
-pub = rospy.Publisher('agent/pose', PoseStamped, queue_size=10)
+pubPose = rospy.Publisher('agent/pose', PoseStamped, queue_size=10)
+pubPoint = rospy.Publisher('agent/point', PointStamped, queue_size=10)
 rospy.init_node('agent', anonymous=True)
-rate = rospy.Rate(10)  # 10hz
+rate = rospy.Rate(100)  # 100hz
 
 if __name__ == '__main__':
     try:

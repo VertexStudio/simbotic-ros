@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
-# Publishes `pose` of agent to the `/agent/pose` topic.
+# Publishes `poseStamped and pointStamped`.
 
 import rospy
 from math import sqrt
 from geometry_msgs.msg import PoseStamped, PointStamped
+from sensor_msgs.msg import Image
 from osc4py3.as_eventloop import (osc_startup, osc_udp_server, osc_method,
                                   osc_process, osc_terminate)
 from osc4py3 import oscmethod as osm
@@ -56,14 +57,34 @@ def handleOSCPointMessage(px, py, pz):
     pubPoint.publish(agentPoint)
     rate.sleep()
 
+
+def handleOSCImageMessage(data):
+    agentImage = Image()
+    
+    agentImage.header.stamp = rospy.Time.now()
+    agentImage.header.frame_id = "unreal"
+    agentImage.encoding = "rgba8"
+    agentImage.height = 30
+    agentImage.width = 30
+    agentImage.data = data.tobytes()
+    agentImage.is_bigendian = 0
+    agentImage.step = 30 * 4
+
+    rospy.loginfo("Publishing...")
+    pubImage.publish(agentImage)
+    rate.sleep()
+
 osc_startup()
 osc_udp_server("0.0.0.0", 7000, "UnrealGAMS")
 
 osc_method("/agent/0/pose", handleOSCPoseMessage)
 osc_method("/agent/0/pos", handleOSCPointMessage)
+osc_method("/agent/0/rgb", handleOSCImageMessage)
 
 pubPose = rospy.Publisher('agent/pose', PoseStamped, queue_size=10)
 pubPoint = rospy.Publisher('agent/point', PointStamped, queue_size=10)
+pubImage = rospy.Publisher('agent/rgb', Image, queue_size=10)
+
 rospy.init_node('agent', anonymous=True)
 rate = rospy.Rate(100)  # 100hz
 

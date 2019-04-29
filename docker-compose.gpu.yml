@@ -14,7 +14,7 @@ services:
     image: simbotic-ros/gpu:v0.0.1
     environment: 
       - DISPLAY
-      - GSCAM_CONFIG="tcpclientsrc host=127.0.0.1 port=5000 ! rawvideoparse width=1920 height=1080 framerate=10/1 format=8 ! videoconvert"
+      - GSCAM_CONFIG="tcpclientsrc host=127.0.0.1 port=5000 ! rawvideoparse width=2448 height=2050 framerate=10/1 format=8 ! videoconvert"
     privileged: true
     cap_add:
       - SYS_PTRACE

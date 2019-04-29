@@ -1,0 +1,3 @@
+[submodule "simbotic_catkin_workspace/src/gscam"]
+	path = simbotic_catkin_workspace/src/gscam
+	url = git@github.com:VertexStudio/gscam.git

@@ -24,4 +24,14 @@ docker-compose -f docker-compose.gpu.yml up
 ```
 docker-compose -f docker-compose.cpu.yml up
 ```
-To consume a camera feed or streaming check the [GScam docs](https://github.com/ros-drivers/gscam).
+# Demos
+
+## Zero-latency streaming
+[![streaming zero-latency from UE4 to ROS](https://raw.githubusercontent.com/racsoraul/simbotic-ros/master/docs/media/streaming_camera_ros_gst.gif)](https://youtu.be/71B5teyduqU)
+
+[![streaming highres from UE4 to ROS](https://raw.githubusercontent.com/racsoraul/simbotic-ros/master/docs/media/streaming_image_ros.gif)](https://youtu.be/71B5teyduqU)
+
+## ROS topics
+[![ros topics](https://raw.githubusercontent.com/racsoraul/simbotic-ros/master/docs/media/simbotic_ros_topics.gif)](https://youtu.be/7ecwkY0zGpE)
+
+> Check [GScam docs](https://github.com/ros-drivers/gscam) to configure a camera feed or streaming.
